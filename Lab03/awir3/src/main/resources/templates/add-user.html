@@ -23,12 +23,6 @@
 <h1>Formularz rejestracji</h1>
 <form th:action="@{/users}" th:object="${user}" method="post">
     <div class="field">
-        <label for="id">Id:</label>
-        <input id="id" type="number" th:field="*{id}"/>
-        <div class="error" th:if="${#fields.hasErrors('id')}"
-             th:errors="*{id}"></div>
-    </div>
-    <div class="field">
         <label for="name">Name:</label>
         <input id="name" type="text" th:field="*{name}"/>
         <div class="error" th:if="${#fields.hasErrors('name')}"
