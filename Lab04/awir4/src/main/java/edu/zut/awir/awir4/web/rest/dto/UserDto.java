@@ -1,6 +1,5 @@
-package edu.zut.awir.awir4.model;
+package edu.zut.awir.awir4.web.rest.dto;
 
-import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -10,16 +9,14 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-@Table(name = "users")
-public class User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class UserDto {
     private Long id;
+
     @NotBlank(message = "Name is required")
     private String name;
+
     @NotBlank(message = "Email is required")
     @Email(message = "Email must be valid")
-    @Column(nullable = false, unique = true)
     private String email;
 }
+

@@ -1,7 +1,8 @@
 package edu.zut.awir.awir4.web.rest;
 
-import edu.zut.awir.awir4.model.User;
 import edu.zut.awir.awir4.service.UserService;
+import edu.zut.awir.awir4.web.rest.dto.UserDto;
+import edu.zut.awir.awir4.web.rest.mapper.UserMapper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,35 +18,37 @@ public class UserRestController {
     private final UserService service;
 
     @GetMapping
-    public List<User> list() {
-        return service.findAll();
+    public List<UserDto> list() {
+        return service.findAll().stream().map(UserMapper::toDto).toList();
     }
 
     @GetMapping("/{id}")
-    public User get(@PathVariable Long id) {
+    public UserDto get(@PathVariable Long id) {
         var u = service.findById(id);
         if (u == null) throw new NotFoundException("User",
                 id);
-        return u;
+        return UserMapper.toDto(u);
     }
 
     @PostMapping
-    public ResponseEntity<User> create(@Valid @RequestBody
-                                       User payload) {
-        payload.setId(null); // ID generowane przez bazę
-        var saved = service.save(payload);
+    public ResponseEntity<UserDto> create(@Valid @RequestBody
+                                          UserDto payload) {
+        var user = UserMapper.toEntity(payload);
+        user.setId(null); // ID generowane przez bazę
+        var saved = service.save(user);
         return
-                ResponseEntity.status(HttpStatus.CREATED).body(saved);
+                ResponseEntity.status(HttpStatus.CREATED).body(UserMapper.toDto(saved));
     }
 
     @PutMapping("/{id}")
-    public User update(@PathVariable Long id, @Valid
-    @RequestBody User payload) {
+    public UserDto update(@PathVariable Long id, @Valid
+    @RequestBody UserDto payload) {
         var existing = service.findById(id);
         if (existing == null) throw new
                 NotFoundException("User", id);
-        payload.setId(id);
-        return service.save(payload);
+        var user = UserMapper.toEntity(payload);
+        user.setId(id);
+        return UserMapper.toDto(service.save(user));
     }
 
     @DeleteMapping("/{id}")
