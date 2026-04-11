@@ -1,10 +1,10 @@
-package edu.zut.awir.awir2;
+package edu.zut.awir.awir4;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class Awir2ApplicationTests {
+class Awir4ApplicationTests {
 
     @Test
     void contextLoads() {
