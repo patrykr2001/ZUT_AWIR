@@ -17,11 +17,16 @@
             <a th:href="@{|/users/${u.id}/edit|}">Edytuj</a>
             <form th:action="@{|/users/${u.id}/delete|}"
                   method="post" style="display:inline">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
                 <button type="submit">Usuń</button>
             </form>
         </td>
     </tr>
 </table>
 <a th:href="@{/users/new}">Dodaj nowego użytkownika</a>
+<form th:action="@{/logout}" method="post" style="margin-top:1rem;">
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+    <button type="submit">Wyloguj</button>
+</form>
 </body>
 </html>
