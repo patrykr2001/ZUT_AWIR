@@ -73,7 +73,8 @@ public class SecurityConfig {
                                 "/", "/error", "/login", "/css/**", "/js/**", "/images/**", "/webjars/**",
                                 "/swagger-ui/**", "/v3/api-docs/**", "/h2/**"
                         ).permitAll()
-                        .requestMatchers("/users/**").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/users/**").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("/users/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/api/**").hasAnyRole("USER", "ADMIN")
                         .requestMatchers(HttpMethod.POST, "/api/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/api/**").hasRole("ADMIN")
