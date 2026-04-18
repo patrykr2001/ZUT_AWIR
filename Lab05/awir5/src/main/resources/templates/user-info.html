@@ -5,6 +5,14 @@
     <title>Informacja o użytkowniku</title>
 </head>
 <body>
+<nav style="display:flex; gap:.75rem; align-items:center; margin-bottom:1rem;">
+    <a th:href="@{/users/list}">Lista</a>
+    <a th:href="@{/users/new}">Dodaj</a>
+    <form th:action="@{/logout}" method="post" style="margin:0;">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+        <button type="submit">Wyloguj</button>
+    </form>
+</nav>
 <h1>Użytkownik</h1>
 <p th:if="${user == null}">
     Brak danych. <a th:href="@{/users/new}">Wróć do formularza</a>
