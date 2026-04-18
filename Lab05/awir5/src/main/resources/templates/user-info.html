@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="pl" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Informacja o użytkowniku</title>
+</head>
+<body>
+<h1>Użytkownik</h1>
+<p th:if="${user == null}">
+    Brak danych. <a th:href="@{/users/new}">Wróć do formularza</a>
+</p>
+<div th:if="${user != null}">
+    <p th:text="'id: ' + ${user.id}"></p>
+    <p th:text="'name: ' + ${user.name}"></p>
+    <p th:text="'email: ' + ${user.email}"></p>
+    <a th:href="@{/users/new}">Kolejny użytkownik</a>
+</div>
+</body>
+</html>
