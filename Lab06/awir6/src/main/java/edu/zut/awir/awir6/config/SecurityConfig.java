@@ -4,14 +4,24 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.core.annotation.Order;
+import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMapper;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.provisioning.UserDetailsManager;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.sql.DataSource;
 
@@ -65,21 +75,40 @@ public class SecurityConfig {
     }
 
     @Bean
-    SecurityFilterChain http(HttpSecurity http) throws Exception {
+    @Order(1)
+    SecurityFilterChain api(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.ignoringRequestMatchers("/api/**", "/h2/**"))
+                .securityMatcher("/api/**")
+                .csrf(AbstractHttpConfigurer::disable)
+                .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(reg -> reg
-                        .requestMatchers(
-                                "/", "/error", "/login", "/css/**", "/js/**", "/images/**", "/webjars/**",
-                                "/swagger-ui/**", "/v3/api-docs/**", "/h2/**"
-                        ).permitAll()
-                        .requestMatchers(HttpMethod.GET, "/users/**").hasAnyRole("USER", "ADMIN")
-                        .requestMatchers("/users/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/api/**").hasAnyRole("USER", "ADMIN")
                         .requestMatchers(HttpMethod.POST, "/api/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/api/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/**").hasRole("ADMIN")
-                        .requestMatchers("/api/**").hasRole("ADMIN")
+                        .anyRequest().authenticated()
+                )
+                .httpBasic(Customizer.withDefaults())
+                .formLogin(AbstractHttpConfigurer::disable)
+                .logout(AbstractHttpConfigurer::disable);
+
+        return http.build();
+    }
+
+    @Bean
+    @Order(2)
+    SecurityFilterChain mvc(HttpSecurity http) throws Exception {
+        http
+                .csrf(csrf -> csrf.ignoringRequestMatchers("/h2/**"))
+                .authorizeHttpRequests(reg -> reg
+                        .requestMatchers(
+                                "/", "/error", "/login", "/oauth2/**", "/login/oauth2/**",
+                                "/css/**", "/js/**", "/images/**", "/webjars/**",
+                                "/swagger-ui/**", "/v3/api-docs/**", "/h2/**"
+                        ).permitAll()
+                        .requestMatchers(HttpMethod.GET, "/users/**").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("/users/**").hasRole("ADMIN")
+                        .requestMatchers("/me").hasAnyRole("USER", "ADMIN")
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(ex -> ex.accessDeniedPage("/access-denied"))
@@ -90,8 +119,11 @@ public class SecurityConfig {
                         .failureUrl("/login?error")
                         .permitAll()
                 )
-                .httpBasic(basic -> {
-                })
+                .oauth2Login(oauth -> oauth
+                        .loginPage("/login")
+                        .defaultSuccessUrl("/users/list", true)
+                        .userInfoEndpoint(userInfo -> userInfo.userAuthoritiesMapper(userAuthoritiesMapper()))
+                )
                 .rememberMe(rm -> rm
                         .rememberMeParameter("remember-me")
                         .key("awir-remember-me-secret-key")
@@ -106,6 +138,15 @@ public class SecurityConfig {
                 .headers(h -> h.frameOptions(f -> f.sameOrigin()));
 
         return http.build();
+    }
+
+    @Bean
+    GrantedAuthoritiesMapper userAuthoritiesMapper() {
+        return authorities -> {
+            Set<GrantedAuthority> mapped = new HashSet<>(authorities);
+            mapped.add(new SimpleGrantedAuthority("ROLE_USER"));
+            return mapped;
+        };
     }
 }
 

@@ -31,23 +31,30 @@
 <h2>Logowanie</h2>
 <form th:action="@{/login}" method="post">
     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-    <div th:if="${param.error}" class="error">Niepoprawny login lub haslo.</div>
-    <div th:if="${param.logout}">Wylogowano pomyslnie.</div>
+    <div th:if="${param.error}" class="error">Niepoprawny login lub hasło.</div>
+    <div th:if="${param.logout}">Wylogowano pomyślnie.</div>
 
-    <label for="username">Uzytkownik</label>
+    <label for="username">Użytkownik</label>
     <input id="username" name="username" type="text" required/>
 
-    <label for="password">Haslo</label>
+    <label for="password">Hasło</label>
     <input id="password" name="password" type="password" required/>
 
     <label style="display:flex; align-items:center; gap:.5rem; margin-top:.5rem;">
-        <input type="checkbox" name="remember-me"/> Zapamietaj mnie
+        <input type="checkbox" name="remember-me"/> Zapamiętaj mnie
     </label>
 
     <p style="margin-top:1rem;">
         <button type="submit">Zaloguj</button>
     </p>
 </form>
+
+<p style="margin-top:1rem;">
+    <a th:href="@{/oauth2/authorization/google}"
+       style="display:inline-block;padding:.5rem .75rem;border:1px solid #ddd;border-radius:6px;text-decoration:none;">
+        Zaloguj przez Google
+    </a>
+</p>
 </body>
 </html>
 

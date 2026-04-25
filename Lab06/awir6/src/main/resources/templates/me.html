@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="pl" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Informacja o użytkowniku</title>
+    <meta charset="UTF-8"/>
+    <title>Mój profil</title>
 </head>
 <body>
 <nav style="display:flex; gap:.75rem; align-items:center; margin-bottom:1rem;">
@@ -14,15 +14,16 @@
         <button type="submit">Wyloguj</button>
     </form>
 </nav>
-<h1>Użytkownik</h1>
-<p th:if="${user == null}">
-    Brak danych. <a th:href="@{/users/new}">Wróć do formularza</a>
-</p>
-<div th:if="${user != null}">
-    <p th:text="'id: ' + ${user.id}"></p>
-    <p th:text="'name: ' + ${user.name}"></p>
-    <p th:text="'email: ' + ${user.email}"></p>
-    <a th:href="@{/users/new}">Kolejny użytkownik</a>
+
+<h2>Mój profil</h2>
+<div th:if="${name}">
+    <img th:if="${picture}" th:src="${picture}" alt="avatar" style="height:64px;border-radius:50%"/>
+    <p><b>Imię i nazwisko:</b> <span th:text="${name}"></span></p>
+    <p><b>E-mail:</b> <span th:text="${email}"></span></p>
+</div>
+<div th:if="${name} == null">
+    <p>Brak danych profilu (nie zalogowano przez Google).</p>
 </div>
 </body>
 </html>
+
