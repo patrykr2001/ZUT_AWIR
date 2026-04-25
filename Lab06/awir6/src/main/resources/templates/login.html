@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pl" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Logowanie</title>
+    <style>
+        body {
+            font-family: system-ui, sans-serif;
+            max-width: 420px;
+            margin: 5rem auto;
+        }
+
+        label {
+            display: block;
+            margin: .5rem 0 .25rem;
+        }
+
+        input[type=text],
+        input[type=password] {
+            width: 100%;
+            padding: .5rem;
+        }
+
+        .error {
+            color: #b00020;
+            margin: .5rem 0;
+        }
+    </style>
+</head>
+<body>
+<h2>Logowanie</h2>
+<form th:action="@{/login}" method="post">
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+    <div th:if="${param.error}" class="error">Niepoprawny login lub haslo.</div>
+    <div th:if="${param.logout}">Wylogowano pomyslnie.</div>
+
+    <label for="username">Uzytkownik</label>
+    <input id="username" name="username" type="text" required/>
+
+    <label for="password">Haslo</label>
+    <input id="password" name="password" type="password" required/>
+
+    <label style="display:flex; align-items:center; gap:.5rem; margin-top:.5rem;">
+        <input type="checkbox" name="remember-me"/> Zapamietaj mnie
+    </label>
+
+    <p style="margin-top:1rem;">
+        <button type="submit">Zaloguj</button>
+    </p>
+</form>
+</body>
+</html>
+
