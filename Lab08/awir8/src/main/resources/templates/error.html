@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="pl" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Blad aplikacji</title>
+</head>
+<body>
+<h2>Wystapil blad</h2>
+<p>
+    Status: <strong th:text="${status}">500</strong>
+</p>
+<p th:if="${error}">
+    Typ: <span th:text="${error}">Internal Server Error</span>
+</p>
+<p th:if="${message}">
+    Szczegoly: <span th:text="${message}">Brak dodatkowych informacji</span>
+</p>
+<p th:if="${path}">
+    Sciezka: <code th:text="${path}">/</code>
+</p>
+<p>
+    <a th:href="@{/login}">Wroc do logowania</a>
+</p>
+</body>
+</html>
+
