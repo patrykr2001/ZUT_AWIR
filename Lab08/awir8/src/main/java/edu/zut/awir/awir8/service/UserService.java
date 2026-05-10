@@ -13,6 +13,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository repository;
+    private final MailService mailService;
 
     @Transactional
     public User save(User user) {
@@ -20,8 +21,18 @@ public class UserService {
             throw new DuplicateEmailException(user.getEmail());
         }
 
+        boolean isCreate = user.getId() == null || !repository.existsById(user.getId());
+
         try {
-            return repository.save(user);
+            User saved = repository.save(user);
+
+            if (isCreate) {
+                mailService.sendUserCreated(saved);
+            } else {
+                mailService.sendUserUpdated(saved);
+            }
+
+            return saved;
         } catch (DataIntegrityViolationException ex) {
             // Zabezpieczenie na wyścig zapisów równoległych.
             throw new DuplicateEmailException(user.getEmail());
