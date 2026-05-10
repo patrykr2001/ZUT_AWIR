@@ -26,16 +26,16 @@ public class MailService {
     private String adminAddress;
 
     public void sendUserCreated(User user) {
-        sendHtml(adminAddress, "Nowy uzytkownik zarejestrowany", "mail-user-created", user, "W systemie zarejestrowano nowego uzytkownika.");
-        sendHtml(user.getEmail(), "Witaj w systemie", "mail-user-created", user, "Twoje konto zostalo utworzone.");
+        sendHtml(adminAddress, adminAddress, "Nowy uzytkownik zarejestrowany", "mail-user-created", user, "W systemie zarejestrowano nowego uzytkownika.");
+        sendHtml(user.getEmail(), adminAddress, "Witaj w systemie", "mail-user-created", user, "Twoje konto zostalo utworzone.");
     }
 
     public void sendUserUpdated(User user) {
-        sendHtml(adminAddress, "Dane uzytkownika zmodyfikowane", "mail-user-updated", user, "W systemie zmodyfikowano dane uzytkownika.");
-        sendHtml(user.getEmail(), "Zmiana danych konta", "mail-user-updated", user, "Twoje dane zostaly zaktualizowane.");
+        sendHtml(adminAddress, adminAddress, "Dane uzytkownika zmodyfikowane", "mail-user-updated", user, "W systemie zmodyfikowano dane uzytkownika.");
+        sendHtml(user.getEmail(), adminAddress, "Zmiana danych konta", "mail-user-updated", user, "Twoje dane zostaly zaktualizowane.");
     }
 
-    private void sendHtml(String to, String subject, String template, User user, String intro) {
+    private void sendHtml(String to, String from, String subject, String template, User user, String intro) {
         if (to == null || to.isBlank()) {
             log.warn("Pominieto wysylke e-maila z powodu pustego adresata. Temat: {}", subject);
             return;
@@ -53,6 +53,7 @@ public class MailService {
             helper.setTo(to);
             helper.setSubject(subject);
             helper.setText(html, true);
+            helper.setFrom(from);
             mailSender.send(msg);
             log.info("Wyslano e-mail do {}: {}", to, subject);
         } catch (MailException | MessagingException ex) {
