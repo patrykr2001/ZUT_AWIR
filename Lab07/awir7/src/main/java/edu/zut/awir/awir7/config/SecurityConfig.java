@@ -34,7 +34,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    UserDetailsManager users(DataSource dataSource, PasswordEncoder encoder) {
+    UserDetailsManager userDetailsManager(DataSource dataSource, PasswordEncoder encoder) {
         JdbcTemplate jdbc = new JdbcTemplate(dataSource);
         jdbc.execute("""
                 create table if not exists users (
@@ -99,12 +99,13 @@ public class SecurityConfig {
     @Order(2)
     SecurityFilterChain mvc(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.ignoringRequestMatchers("/h2/**"))
+                .csrf(csrf -> csrf.ignoringRequestMatchers("/h2/**", "/ws/**", "/ws"))
                 .authorizeHttpRequests(reg -> reg
                         .requestMatchers(
                                 "/", "/error", "/login", "/oauth2/**", "/login/oauth2/**",
                                 "/css/**", "/js/**", "/images/**", "/webjars/**",
-                                "/swagger-ui/**", "/v3/api-docs/**", "/h2/**"
+                                "/swagger-ui/**", "/v3/api-docs/**", "/h2/**",
+                                "/ws", "/ws/**"
                         ).permitAll()
                         .requestMatchers(HttpMethod.GET, "/users/**").hasAnyRole("USER", "ADMIN")
                         .requestMatchers("/users/**").hasRole("ADMIN")
