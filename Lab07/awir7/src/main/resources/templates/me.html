@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="pl" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Mój profil</title>
+</head>
+<body>
+<nav style="display:flex; gap:.75rem; align-items:center; margin-bottom:1rem;">
+    <a th:href="@{/users/list}">Lista</a>
+    <a th:href="@{/users/new}">Dodaj</a>
+    <a th:href="@{/me}">Mój profil</a>
+    <form th:action="@{/logout}" method="post" style="margin:0;">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+        <button type="submit">Wyloguj</button>
+    </form>
+</nav>
+
+<h2>Mój profil</h2>
+<div th:if="${name}">
+    <img th:if="${picture}" th:src="${picture}" alt="avatar" style="height:64px;border-radius:50%"/>
+    <p><b>Imię i nazwisko:</b> <span th:text="${name}"></span></p>
+    <p><b>E-mail:</b> <span th:text="${email}"></span></p>
+</div>
+<div th:if="${name} == null">
+    <p>Brak danych profilu (nie zalogowano przez Google).</p>
+</div>
+</body>
+</html>
+
