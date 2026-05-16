@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Nowy uzytkownik</title>
+</head>
+<body>
+<h2 th:text="${intro}">W systemie zarejestrowano nowego uzytkownika.</h2>
+<p><strong>ID:</strong> <span th:text="${user.id}">1</span></p>
+<p><strong>Imie i nazwisko:</strong> <span th:text="${user.name}">Jan Kowalski</span></p>
+<p><strong>Email:</strong> <span th:text="${user.email}">jan@example.com</span></p>
+</body>
+</html>

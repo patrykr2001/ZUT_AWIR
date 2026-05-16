@@ -1,0 +1,17 @@
+version: "3.8"
+services:
+  app:
+    build: .
+    image: awir10:0.0.1
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=default
+      - MAIL_HOST=${MAIL_HOST:-sandbox.smtp.mailtrap.io}
+      - MAIL_PORT=${MAIL_PORT:-2525}
+      - MAIL_USERNAME=${MAIL_USERNAME:-}
+      - MAIL_PASSWORD=${MAIL_PASSWORD:-}
+      - APP_MAIL_ADMIN=${APP_MAIL_ADMIN:-admin@example.com}
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID:-}
+      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET:-}
+    restart: unless-stopped

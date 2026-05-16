@@ -1,0 +1,9 @@
+ ### SI gateway: ADMIN
+POST http://localhost:8080/si/users-sync
+Authorization: Basic YWRtaW46YWRtaW4xMjM=
+Content-Type: application/json
+
+{
+  "name": "Integration User 2",
+  "email": "integration2@example.com"
+}
